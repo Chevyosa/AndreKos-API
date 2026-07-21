@@ -1,0 +1,56 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Room {
+  idKamar             String  @id @default(uuid())
+  nomorKamar          String  @unique
+  statusKamar         String  // "KOSONG" | "TERISI"
+  hargaKamar          Int
+  tipePembayaran      String? // "CASH" | "DIGITAL" | null
+  namaPenghuni        String?
+  idPenghuni          String?
+  statusBayarBulanIni String? // "LUNAS" | "BELUM_BAYAR" | null
+  tanggalJatuhTempo   String?
+  
+  @@map("rooms")
+}
+
+model Transaction {
+  id        String @id @default(uuid())
+  tipe      String // "DIGITAL" | "CASH" | "WITHDRAW"
+  nominal   Int
+  tanggal   String
+  deskripsi String
+
+  @@map("transactions")
+}
+
+model RequestMove {
+  idRequest        String @id @default(uuid())
+  idPenghuni       String
+  namaPenghuni     String
+  kamarAsal        String
+  kamarTujuan      String
+  tanggalPengajuan String
+  statusRequest    String // "PENDING" | "APPROVED" | "REJECTED"
+
+  @@map("request_moves")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  nama      String
+  role      String   // "ADMIN" | "ANAK_KOS"
+  createdAt DateTime @default(now())
+
+  @@map("users")
+}
